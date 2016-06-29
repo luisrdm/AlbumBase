@@ -1,7 +1,9 @@
 package com.ejemplo.album.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,13 +22,13 @@ import util.ResultListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Esta variable es una manera muy conveniente de guardarse siempre un contexto. Aca como estamos en un activity, el mismo va a ser el contexto.
     Context context;
 
     List<Album> albumsList = new ArrayList<>();
     RecyclerView recyclerViewAlbums;
     AdapterAlbumsRecyclerViewHome adapterAlbumsRecyclerViewHome;
-
+    AlbumController albumController;
+    SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +37,26 @@ public class MainActivity extends AppCompatActivity {
 
         context = this;
 
-        AlbumController albumController = new AlbumController();
+        albumController = new AlbumController();
 
+        askControllerForAlbums();
+
+        swipeContainer = (SwipeRefreshLayout) findViewById(R.id.activity_main_SwipeRefresh);
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                askControllerForAlbums();
+            }
+        });
+
+    }
+
+    private void askControllerForAlbums (){
         albumController.getAlbums(new ResultListener<List<Album>>() {
             @Override
             public void finish(List<Album> resultado) {
+                swipeContainer.setRefreshing(true);
+
                 albumsList = resultado;
                 recyclerViewAlbums = (RecyclerView) findViewById(R.id.recyclerViewHome);
 
@@ -52,18 +69,28 @@ public class MainActivity extends AppCompatActivity {
 
                 ListenerAlbums listenerAlbums = new ListenerAlbums();
                 adapterAlbumsRecyclerViewHome.setOnClickListener(listenerAlbums);
+                swipeContainer.setRefreshing(false);
 
-                Log.v("Pruebaaaaaaaaaaaaa", albumsList.toString());
             }
         }, context);
-
     }
 
     private class ListenerAlbums implements View.OnClickListener {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(MainActivity.this, "Se presionó el item " + recyclerViewAlbums.getChildPosition(v), Toast.LENGTH_SHORT).show();
+            Integer albumPosition = recyclerViewAlbums.getChildPosition(v);
+
+            Intent intent = new Intent(context, ActivityDetalle.class);
+
+            Bundle bundle = new Bundle();
+
+            bundle.putInt(ActivityDetalle.ALBUMPOSITION, albumPosition);
+
+            intent.putExtras(bundle);
+
+            startActivity(intent);
+
         }
     }
 

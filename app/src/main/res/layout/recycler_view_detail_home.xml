@@ -33,17 +33,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/titulo_del_album"
-                android:textSize="16dp"
+                android:textSize="10dp"
                 />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/textViewAlbumTitle"
+                android:id="@+id/recyclerViewHomeTextViewAlbumTitle"
                 android:textSize="16dp"
                 android:gravity="left"
-
                 />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/recyclerViewHomeTextViewAlbumID"
+                android:textSize="10sp"/>
+
+
         </LinearLayout>
 
 

@@ -37,11 +37,8 @@ public class AdapterAlbumsRecyclerViewHome extends RecyclerView.Adapter implemen
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_view_detail_home, parent, false);
-
         AlbumsViewHolder albumsViewHolder = new AlbumsViewHolder(itemView);
-
         itemView.setOnClickListener(this);
-
         return  albumsViewHolder;
     }
 
@@ -49,9 +46,7 @@ public class AdapterAlbumsRecyclerViewHome extends RecyclerView.Adapter implemen
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         Album anAlbum = albumsList.get(position);
-
         AlbumsViewHolder albumsViewHolder = (AlbumsViewHolder) holder;
-
         albumsViewHolder.bindPelicula(anAlbum, context);
     }
 
@@ -70,19 +65,22 @@ public class AdapterAlbumsRecyclerViewHome extends RecyclerView.Adapter implemen
 
         private TextView textViewAlbumTitle;
         private ImageView imageViewAlbumThumb;
+        private TextView textViewAlbumID;
 
         public AlbumsViewHolder(View itemView) {
             super(itemView);
 
-            textViewAlbumTitle = (TextView) itemView.findViewById(R.id.textViewAlbumTitle);
+            textViewAlbumTitle = (TextView) itemView.findViewById(R.id.recyclerViewHomeTextViewAlbumTitle);
             imageViewAlbumThumb = (ImageView) itemView.findViewById(R.id.imageViewAlbumThumb);
+            textViewAlbumID = (TextView) itemView.findViewById(R.id.recyclerViewHomeTextViewAlbumID);
         }
 
         public void bindPelicula(Album anAlbum, Context context) {
 
             textViewAlbumTitle.setText(anAlbum.getTitle());
+            textViewAlbumID.setText(anAlbum.getId());
 
-            Picasso.with(context).load(anAlbum.getThumbnailUrl()).into(imageViewAlbumThumb);
+            Picasso.with(context).load(anAlbum.getThumbnailUrl()).placeholder(R.drawable.noimage).error(R.drawable.noimage).into(imageViewAlbumThumb);
         }
     }
 }
